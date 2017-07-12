@@ -1,4 +1,4 @@
-#: import main main
+#: import Estimate Estimate
 #: import ListAdapter kivy.adapters.listadapter.ListAdapter
 #: import ListItemButton kivy.uix.listview.ListItemButton
 
@@ -78,7 +78,7 @@ ScreenManagement:
 		adapter:
 			ListAdapter(data=[], 
 			args_converter = lambda row_index, an_obj: {'text': an_obj, 'size_hint_y': None, 'height': 200},
-			cls=main.ToolListButton)
+			cls=Estimate.ToolListButton)
 
 <Labor>:
     name: 'labor'

@@ -167,7 +167,7 @@ class ToolDB(BoxLayout, Screen):
 		toollist = str(self.tool_list.adapter.data)
 
 		document = Document()
-		my_image = document.add_picture('acmelogo.png', width=Inches(1.0))
+		my_image = document.add_picture('companylogo.png', width=Inches(1.0))
 		last_paragraph = document.paragraphs[-1]
 		last_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
