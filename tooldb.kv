@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #: import Estimate Estimate
 #: import ListAdapter kivy.adapters.listadapter.ListAdapter
 #: import ListItemButton kivy.uix.listview.ListItemButton
@@ -190,4 +191,198 @@ ScreenManagement:
         Button:
             text: "Exit the App"
             size_hint_x: None
+=======
+#: import Estimate Estimate
+#: import ListAdapter kivy.adapters.listadapter.ListAdapter
+#: import ListItemButton kivy.uix.listview.ListItemButton
+
+ScreenManagement:
+    NamePopup:
+    ToolDB:
+    Labor:
+    EmailInterface:
+    GoBack:
+
+<NamePopup>:
+    name: 'filenamepopup'
+    orientation: 'vertical'
+    filename_text_input: filename
+    BoxLayout:
+        size_hint: (1, None)
+        height: 50
+        spacing: 100
+        pos_hint: {'y': 0.5 , 'top': 0.5}
+        Label:
+            text: "Please enter a file name: "
+        TextInput:
+            id: filename
+        Button:
+            text: "Continue -->"
+            on_press: app.root.current = 'tooldb'
+
+<ToolDB>:
+	name: 'tooldb'
+	orientation: "vertical"
+	tool_text_input: tool_name
+	tool_list: tool_list_view
+	padding: 10
+	spacing: 10
+
+	BoxLayout:
+		size_hint_y: None
+		height: "40dp"
+
+		Label:
+			text: "Enter a Material Item: "
+		TextInput:
+			id: tool_name
+
+	BoxLayout:
+		size_hint_y: None
+		height: "40dp"
+		Button:
+			text: "Submit"
+			size_hint_x: 20
+			on_press: root.submit_tool()
+		Button:
+			text: "Delete"
+			size_hint_x: 20
+			on_press: root.delete_tool()
+		Button:
+			text: "Replace"
+			size_hint_x: 20
+			on_press: root.replace_tool()
+		Button:
+            text: 'Save to file'
+            size_hint_x: 20
+            on_press: root.save(name=root.manager.get_screen('filenamepopup').filename_text_input.text)
+        Button:
+            text: "Labor"
+            size_hint_x: 20
+            on_press: root.save(name=root.manager.get_screen('filenamepopup').filename_text_input.text)
+            on_press: app.root.current = 'labor'
+        Button:
+			text: "Send Email"
+			size_hint_x: 20
+            on_press: root.save(name=root.manager.get_screen('filenamepopup').filename_text_input.text)
+			on_press: app.root.current = 'email'
+
+	ListView:
+		id: tool_list_view
+		adapter:
+			ListAdapter(data=[], 
+			args_converter = lambda row_index, an_obj: {'text': an_obj, 'size_hint_y': None, 'height': 200},
+			cls=Estimate.ToolListButton)
+
+<Labor>:
+    name: 'labor'
+    orientation: "vertical"
+    padding: 10
+    spacing: 10
+
+    BoxLayout:
+        size_hint_y: None
+        height: "40dp"
+
+        Label:
+            text: "Some stuff goes here: "
+        TextInput:
+            id: labor_stuff
+
+    BoxLayout:
+        size_hint_y: None
+        height: "40dp"
+        Button:
+            text: "Back to Tool List"
+            size_hint_x: 23
+            on_press: app.root.current = 'tooldb'
+        Button:
+            text: "Send Email"
+            size_hint_x: 23
+            on_press: app.root.current = 'email'
+
+<EmailInterface>:
+	name: 'email'
+    orientation: 'vertical'
+    BoxLayout:
+        size_hint_y: None
+        height: "40dp"
+        Button:
+            text: "Back to Tool List"
+            size_hint_x: 23
+            on_press: app.root.current = 'tooldb'
+        Button:
+            text: "Back to Labor"
+            size_hint_x: 23
+            on_press: app.root.current = 'labor'
+    BoxLayout:
+        Label:
+            text: 'Acme Email:'
+        TextInput:
+            id: acmeemail
+            never_selected: False
+        	text: 'acmetestemail.com'
+        	on_focus: if self.never_selected == False: self.text = ''; self.never_selected = True
+    BoxLayout:
+        Label:
+            text: "Client's Email:"
+        TextInput:
+            id: senderemail
+    BoxLayout:
+        Label:
+            text: "Supply House Email:"
+        TextInput:
+            id: supplyhouseemail
+    BoxLayout:
+        Label:
+            text: 'Sender Email:'
+        TextInput:
+            id: recipientemail
+    BoxLayout:
+        Label:
+            text: 'Subject Line:'
+        TextInput:
+            id: subject
+            never_selected: False
+            text: 'Job #: '
+            on_focus: if self.never_selected == False: self.text = 'Job #: '; self.never_selected = True
+    BoxLayout:
+        Label:
+            text: 'Text:'
+        TextInput:
+            id: text
+            never_selected: False
+            text: 'Proposal (Body of Email):'
+            on_focus: if self.never_selected == False: self.text = ''; self.never_selected = True
+            multiline: True
+    IntentButton:
+        email_recipient: senderemail.text
+        email_sender: recipientemail.text
+        email_subject: subject.text
+        email_acme: acmeemail.text
+        email_supply: supplyhouseemail.text
+        email_text: text.text
+        email_filename: root.manager.get_screen('filenamepopup').filename_text_input.text
+        text: 'Send email'
+        size_hint_y: None
+        height: sp(40)
+        on_press: self.send_email(root.manager.get_screen('filenamepopup').filename_text_input.text)
+        on_press: app.root.current = 'goback'
+
+<GoBack>:
+    name: 'goback'
+    orientation: 'horizontal'
+    BoxLayout:
+        size_hint_y: None
+        height: "40dp"
+        Label:
+            text: "Do you want to go back to the app?"
+        Button:
+            text: "Go Back to App"
+            size_hint_x: None
+            on_press: app.root.current = 'tooldb'
+        Button:
+            text: "Exit the App"
+            size_hint_x: None
+>>>>>>> dd3a70ffb178620a12cf636ab18ea3b94b3a1f4f
             on_press: app.root.get_running_app().stop()
