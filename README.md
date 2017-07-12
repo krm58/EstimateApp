@@ -1,2 +1,2 @@
-# EstimateApp
-Multi-platform app to be used for creating estimates for plumbing jobs. Collaboration with Edward Paul.
+# Estimate_App
+Estimate App written in colaboration with Edward Paul Jr.

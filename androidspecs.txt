@@ -1,0 +1,3 @@
+title=Acme Estimator App
+author=Kelsey McDonald
+orientation=portrait

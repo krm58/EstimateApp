@@ -1,0 +1,10 @@
+--add estimate questions, labor table, and estimate example to appropriate screens
+--be able to add 1 field for total price for material, to be added by user
+--be able to send just material list (not labor)
+--enter # on material list (default nothing). then goes to labor screen. 
+--then once u pick guys and estimated time, that will generate a number. Final document will be material cost plus labor cost, and total cost of estimate. 
+--need to test sending to 3 distinct emails, all properly
+--be able to send to multiple emails at acme
+--make "restart" button
+--be able to go back to file name screen
+--fix all screens and make pretty
