@@ -181,12 +181,21 @@ class ToolDB(BoxLayout, Screen):
 		file = str(name) + '.docx'
 		document.save(file)
 
-class Labor(BoxLayout, Screen):
-	 def close_popup(self):
-	 	self.dismiss
+# class Labor(BoxLayout, Screen):
+# 	 def close_popup(self):
+# 	 	self.dismiss
 
 class NamePopup(BoxLayout, Button, Screen):
 	filename_text_input = ObjectProperty()
+	pass
+
+class TimeorEstimate(BoxLayout, Button, Screen):
+	pass
+
+class PriceBook(BoxLayout, Button, Screen):
+	pass
+
+class TimeCard(BoxLayout, Button, Screen):
 	pass
 
 presentation = Builder.load_file("tooldb.kv")
@@ -195,12 +204,15 @@ class NamePopup(App):
 	filename = StringProperty('')
 	def build(self):
 		return presentation
+class TimeorEstimate(App):
+	def build(self):
+		return presentation
 class ToolDBApp(App):
 	def build(self):
 		return presentation
-class LaborApp(App):
-	def build(self):
-		return presentation
+# class LaborApp(App):
+# 	def build(self):
+# 		return presentation
 class EmailApp(App):
 	def build(self):
 		return EmailInterface()
@@ -210,9 +222,9 @@ class EmailApp(App):
 
 # if __name__ == "__main__":
 
-# 	#dbApp = ToolDBApp()
+TimeorEstimate().run()
 NamePopup().run()
 ToolDBApp().run()
 EmailApp().run()
-LaborApp().run()
+# LaborApp().run()
 GoBack().run()

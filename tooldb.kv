@@ -3,11 +3,32 @@
 #: import ListItemButton kivy.uix.listview.ListItemButton
 
 ScreenManagement:
+    TimeorEstimate:
     NamePopup:
+    PriceBook:
+    TimeCard:
     ToolDB:
-    Labor:
     EmailInterface:
     GoBack:
+
+<TimeOrEstimate>:
+    name: 'timeorestimateopt'
+    orientation: 'vertical'
+    padding: 10
+    spacing: 10
+    BoxLayout:
+        Button:
+            text: 'Submit a Time Card'
+            size_hint_x: 20
+            on_press: app.root.current = 'timecard'
+        Button:
+            text: 'Create an Estimate Using Price Book'
+            size_hint_x: 20
+            on_press: app.root.current = 'pricebook'
+        Button:
+            text: 'Create a Custom Estimate'
+            size_hint_x: 20
+            on_press: app.root.current = 'tooldb'
 
 <NamePopup>:
     name: 'filenamepopup'
@@ -25,6 +46,20 @@ ScreenManagement:
         Button:
             text: "Continue -->"
             on_press: app.root.current = 'tooldb'
+
+<PriceBook>:
+    name: 'pricebook'
+    orientation: 'vertical'
+    BoxLayout:
+        Button:
+            text: 'test for price book'
+
+<TimeCard>:
+    name: 'timecard'
+    orientation: 'vertical'
+    BoxLayout:
+        Button:
+            text: 'test for time card'
 
 <ToolDB>:
 	name: 'tooldb'
@@ -61,12 +96,6 @@ ScreenManagement:
 		Button:
             text: 'Save to file'
             size_hint_x: 20
-            on_press: root.save(name=root.manager.get_screen('filenamepopup').filename_text_input.text)
-        Button:
-            text: "Labor"
-            size_hint_x: 20
-            on_press: root.save(name=root.manager.get_screen('filenamepopup').filename_text_input.text)
-            on_press: app.root.current = 'labor'
         Button:
 			text: "Send Email"
 			size_hint_x: 20
@@ -79,33 +108,6 @@ ScreenManagement:
 			ListAdapter(data=[], 
 			args_converter = lambda row_index, an_obj: {'text': an_obj, 'size_hint_y': None, 'height': 200},
 			cls=Estimate.ToolListButton)
-
-<Labor>:
-    name: 'labor'
-    orientation: "vertical"
-    padding: 10
-    spacing: 10
-
-    BoxLayout:
-        size_hint_y: None
-        height: "40dp"
-
-        Label:
-            text: "Some stuff goes here: "
-        TextInput:
-            id: labor_stuff
-
-    BoxLayout:
-        size_hint_y: None
-        height: "40dp"
-        Button:
-            text: "Back to Tool List"
-            size_hint_x: 23
-            on_press: app.root.current = 'tooldb'
-        Button:
-            text: "Send Email"
-            size_hint_x: 23
-            on_press: app.root.current = 'email'
 
 <EmailInterface>:
 	name: 'email'
@@ -141,7 +143,7 @@ ScreenManagement:
             id: supplyhouseemail
     BoxLayout:
         Label:
-            text: 'Sender Email:'
+            text: "Sender's Email:"
         TextInput:
             id: recipientemail
     BoxLayout:
