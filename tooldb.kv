@@ -28,7 +28,7 @@ ScreenManagement:
         Button:
             text: 'Create a Custom Estimate'
             size_hint_x: 20
-            on_press: app.root.current = 'tooldb'
+            on_press: app.root.current = 'filenamepopup'
 
 <NamePopup>:
     name: 'filenamepopup'
@@ -45,7 +45,7 @@ ScreenManagement:
             id: filename
         Button:
             text: "Continue -->"
-            on_press: app.root.current = 'tooldb'
+            on_press: if root.isFileOriginal(): app.root.current = 'tooldb'
 
 <PriceBook>:
     name: 'pricebook'
@@ -94,8 +94,9 @@ ScreenManagement:
 			size_hint_x: 20
 			on_press: root.replace_tool()
 		Button:
-            text: 'Save to file'
+            text: 'Change File Name'
             size_hint_x: 20
+            on_press: app.root.current = 'filenamepopup'
         Button:
 			text: "Send Email"
 			size_hint_x: 20
@@ -120,9 +121,9 @@ ScreenManagement:
             size_hint_x: 23
             on_press: app.root.current = 'tooldb'
         Button:
-            text: "Back to Labor"
+            text: "Change File Name"
             size_hint_x: 23
-            on_press: app.root.current = 'labor'
+            on_press: app.root.current = 'filenamepopup'
     BoxLayout:
         Label:
             text: 'Acme Email:'

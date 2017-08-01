@@ -31,6 +31,7 @@ from oauth2client.file import Storage
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label  
 from kivy.uix.textinput import TextInput
+import glob
 
 try:
 	import argparse
@@ -187,8 +188,18 @@ class ToolDB(BoxLayout, Screen):
 
 class NamePopup(BoxLayout, Button, Screen):
 	filename_text_input = ObjectProperty()
-	pass
-
+	
+	def isFileOriginal(self):
+		# print("MY FILE NAME IS: " + str(self.filename_text_input.text))
+		inputstr = str(self.filename_text_input.text) + '.*'
+		if glob.glob(inputstr):
+			popup = Popup(title='File already exists!', content=Label(text='We see that there is already a file with that name. \nPlease enter a different file name!'),
+				size_hint=(None, None), size=(400, 400))
+			popup.open()
+			bool = False
+		else: bool = True
+		return bool
+	
 class TimeorEstimate(BoxLayout, Button, Screen):
 	pass
 
