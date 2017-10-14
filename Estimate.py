@@ -41,6 +41,13 @@ except ImportError:
 
 class ToolListButton(ListItemButton):
 	pass
+	# selected_color= [0, 1, 0, 1]
+	# deselected_color= [0, 0, 1, 1]
+	# #halign= 'right'
+	# #size_hint_y=(None, None)
+
+class PriceListButton(ListItemButton):
+	pass
 
 class EmailInterface(BoxLayout, Screen):
 	pass
@@ -128,63 +135,134 @@ class IntentButton(Button):
 
 class ToolDB(BoxLayout, Screen):
 	tool_text_input = ObjectProperty()
+	tool_price_input = ObjectProperty()
 	tool_list = ObjectProperty()
+	price_list = ObjectProperty()
+	estnumber = StringProperty()
+
+	def __init__(self, **kwargs):
+		super(ToolDB, self).__init__(**kwargs)
+		self.estcounter = 0
+		self.estnumber = "Estimate Option: " + str(self.estcounter+1)
+		self.estimatejobsDict = {}
+	
+	def change_text(self):
+		self.estcounter = self.estcounter + 1
+		self.estnumber = "Estimate Option: " + str(self.estcounter+1)
+
+	def prepnewlist(self):
+		# for tool in self.tool_list.adapter.data:
+		# 	self.tool_list.adapter.data.remove(tool)
+		# 	self.tool_list._trigger_reset_populate()
+		# for price in self.price_list.adapter.data:
+		# 	self.price_list.adapter.data.remove(price)
+		# 	self.price_list._trigger_reset_populate()
+		
+		self.estimatejobsDict["toollist_"+str(self.estcounter)] = self.tool_list.adapter.data
+		self.estimatejobsDict["pricelist_"+str(self.estcounter)] = self.price_list.adapter.data
+
+		self.tool_list.adapter.data = []
+		self.price_list.adapter.data = []
 
 	def submit_tool(self):
 		# Get the tool's name from textInputs
 		tool_name = self.tool_text_input.text
+		tool_price = self.tool_price_input.text
 		#Add to ListView
 		self.tool_list.adapter.data.extend([tool_name])
+		self.price_list.adapter.data.extend([tool_price])
 		#Reset the ListView
 		self.tool_text_input.text = "" 
+		self.tool_price_input.text = ""
 		self.tool_list._trigger_reset_populate()
+		self.price_list._trigger_reset_populate()
 
 	def delete_tool(self):
-		# If a list item is selected
+		# If a list item is selected using tool
+		#import pdb; pdb.set_trace()
 		if self.tool_list.adapter.selection:
 
 			#Get the text from the item selected
 			selection = self.tool_list.adapter.selection[0].text
+			ind = self.tool_list.adapter.data.index(selection)
+			selection_price = self.price_list.adapter.data[ind]
 			#Remove the matching item
 			self.tool_list.adapter.data.remove(selection)
+			self.price_list.adapter.data.remove(selection_price)
 			#Reset the List View
 			self.tool_list._trigger_reset_populate()
+			self.price_list._trigger_reset_populate()
 
-	def replace_tool(self):
-		#If a list item is selected
-		if self.tool_list.adapter.selection:
+		if self.price_list.adapter.selection: #if list item is selected using price
+
 			#Get the text from the item selected
-			selection = self.tool_list.adapter.selection[0].text
+			selection_price = self.price_list.adapter.selection[0].text
+			ind = self.price_list.adapter.data.index(selection_price)
+			selection_tool = self.tool_list.adapter.data[ind]
 			#Remove the matching item
-			self.tool_list.adapter.data.remove(selection)
-			#Get the name of the tool from TextInputs
-			tool_name = self.tool_text_input.text
-			#Add the updated data to the list
-			self.tool_list.adapter.data.extend([tool_name])
-			#Reset the ListView
+			self.tool_list.adapter.data.remove(selection_tool)
+			self.price_list.adapter.data.remove(selection_price)
+			#Reset the List View
 			self.tool_list._trigger_reset_populate()
+			self.price_list._trigger_reset_populate()
+
+	# def replace_tool(self):
+	# 	#If a list item is selected
+	# 	if self.tool_list.adapter.selection:
+	# 		#Get the text from the item selected
+	# 		selection = self.tool_list.adapter.selection[0].text
+	# 		selection_price = self.price_list.adapter.selection[0].text
+	# 		#Remove the matching item
+	# 		self.tool_list.adapter.data.remove(selection)
+	# 		self.price_list.adapter.data.remove(selection_price)
+	# 		#Get the name of the tool from TextInputs
+	# 		tool_name = self.tool_text_input.text
+	# 		price_name = self.tool_price_input.text
+	# 		#Add the updated data to the list
+	# 		self.tool_list.adapter.data.extend([tool_name])
+	# 		self.price_list.adapter.data.extend([tool_price])
+	# 		#Reset the ListView
+	# 		self.tool_list._trigger_reset_populate()
+	# 		self.price_list._trigger_reset_populate()
 
 	def save(self,name):
-		toollist = str(self.tool_list.adapter.data)
-
 		document = Document()
 		my_image = document.add_picture('companylogo.png', width=Inches(1.0))
 		last_paragraph = document.paragraphs[-1]
 		last_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+		for i in range(1,self.estcounter+1):
+			paragraph1 = document.add_paragraph()
+			if self.estcounter == 1: #if there is only one estimate option
+				paragraph1.add_run('Materials List').bold = True
+			else:
+				headername = "Materials List--Option " + str(i)
+				paragraph1.add_run(headername).bold = True
+			paragraph1.alignment = WD_ALIGN_PARAGRAPH.CENTER
+			#Make a table that includes both the item and the price
+			table = document.add_table(rows=1, cols=2)
+			table.style = 'LightShading-Accent1'
+			hdr_cells = table.rows[0].cells
+			hdr_cells[0].text = 'Item'
+			hdr_cells[1].text = 'Price'
+			sumtotal = 0
+			#import pdb; pdb.set_trace()
+			currtoollist = self.estimatejobsDict["toollist_"+str(i)]
+			currpricelist = self.estimatejobsDict["pricelist_"+str(i)]
+			
+			#toollist = str(self.tool_list.adapter.data)
+			#pricelist = str(self.price_list.adapter.data)
 
-		paragraph1 = document.add_paragraph()
-		paragraph1.add_run('Materials List').bold = True
-		paragraph1.alignment = WD_ALIGN_PARAGRAPH.CENTER
-
-		for item in self.tool_list.adapter.data:
-			paragraph2 = document.add_paragraph(style='ListBullet')
-			paragraph2.add_run(str(item)).italic = True
+			for item in range(len(currtoollist)):
+			    row_cells = table.add_row().cells
+			    row_cells[0].text = str(currtoollist[item])
+			    row_cells[1].text = str(currpricelist[item])
+			    sumtotal += int(currpricelist[item])
+			row_cells_total = table.add_row().cells
+			row_cells_total[0].text = str("TOTAL COST OF ESTIMATE:    ")
+			row_cells_total[1].text = str(sumtotal)
+			
 		file = str(name) + '.docx'
 		document.save(file)
-
-# class Labor(BoxLayout, Screen):
-# 	 def close_popup(self):
-# 	 	self.dismiss
 
 class NamePopup(BoxLayout, Button, Screen):
 	filename_text_input = ObjectProperty()

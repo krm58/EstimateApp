@@ -65,18 +65,29 @@ ScreenManagement:
 	name: 'tooldb'
 	orientation: "vertical"
 	tool_text_input: tool_name
+    tool_price_input: tool_price
 	tool_list: tool_list_view
+    price_list: price_list_view
 	padding: 10
 	spacing: 10
+
+    BoxLayout:
+        size_hint_y: None
+        height: "40dp"
+        Label:
+            text: root.estnumber
 
 	BoxLayout:
 		size_hint_y: None
 		height: "40dp"
-
 		Label:
 			text: "Enter a Material Item: "
 		TextInput:
 			id: tool_name
+        Label:
+            text: "Price: "
+        TextInput:
+            id: tool_price
 
 	BoxLayout:
 		size_hint_y: None
@@ -90,25 +101,38 @@ ScreenManagement:
 			size_hint_x: 20
 			on_press: root.delete_tool()
 		Button:
-			text: "Replace"
-			size_hint_x: 20
-			on_press: root.replace_tool()
-		Button:
             text: 'Change File Name'
             size_hint_x: 20
             on_press: app.root.current = 'filenamepopup'
         Button:
+            text: 'Add An Estimate Option'
+            size_hint_x: 20
+            on_press: root.save(name=root.manager.get_screen('filenamepopup').filename_text_input.text)
+            on_press: root.prepnewlist()
+            on_press: root.change_text()
+            
+        Button:
 			text: "Send Email"
 			size_hint_x: 20
             on_press: root.save(name=root.manager.get_screen('filenamepopup').filename_text_input.text)
+            on_press: root.prepnewlist()
+			on_press: root.change_text()
 			on_press: app.root.current = 'email'
 
-	ListView:
-		id: tool_list_view
-		adapter:
-			ListAdapter(data=[], 
-			args_converter = lambda row_index, an_obj: {'text': an_obj, 'size_hint_y': None, 'height': 200},
-			cls=Estimate.ToolListButton)
+    BoxLayout:
+        orientation: 'horizontal'
+    	ListView:
+    		id: tool_list_view
+    		adapter:
+    			ListAdapter(data=[], 
+    			args_converter = lambda row_index, an_obj: {'text': an_obj},
+                cls=Estimate.ToolListButton)
+        ListView:
+            id: price_list_view
+            adapter:
+                ListAdapter(data=[], 
+                args_converter = lambda row_index, an_obj: {'text': an_obj},
+                cls=Estimate.PriceListButton)
 
 <EmailInterface>:
 	name: 'email'
