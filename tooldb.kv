@@ -160,7 +160,7 @@ ScreenManagement:
         Label:
             text: "Client's Email:"
         TextInput:
-            id: senderemail
+            id: recipientemail
     BoxLayout:
         Label:
             text: "Supply House Email:"
@@ -170,7 +170,7 @@ ScreenManagement:
         Label:
             text: "Sender's Email:"
         TextInput:
-            id: recipientemail
+            id: senderemail
     BoxLayout:
         Label:
             text: 'Subject Line:'
@@ -189,8 +189,8 @@ ScreenManagement:
             on_focus: if self.never_selected == False: self.text = ''; self.never_selected = True
             multiline: True
     IntentButton:
-        email_recipient: senderemail.text
-        email_sender: recipientemail.text
+        email_recipient: recipientemail.text
+        email_sender: senderemail.text
         email_subject: subject.text
         email_acme: acmeemail.text
         email_supply: supplyhouseemail.text

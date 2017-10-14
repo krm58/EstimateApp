@@ -41,10 +41,6 @@ except ImportError:
 
 class ToolListButton(ListItemButton):
 	pass
-	# selected_color= [0, 1, 0, 1]
-	# deselected_color= [0, 0, 1, 1]
-	# #halign= 'right'
-	# #size_hint_y=(None, None)
 
 class PriceListButton(ListItemButton):
 	pass
@@ -107,14 +103,23 @@ class IntentButton(Button):
 		can be used to indicate the authenticated user.
 		message: Message to be sent.
 		Returns: Sent Message.
-		"""		
+		"""	
 		credentials = get_credentials()
 		http = credentials.authorize(httplib2.Http())
 		service = discovery.build('gmail', 'v1', http=http)
 
 		msg = MIMEMultipart()
-		msg['From'] = self.email_recipient
-		msg['To'] = self.email_sender #self.email_acme #, self.email_recipient
+		msg['From'] = self.email_sender
+		recipients = []
+		if self.email_recipient:
+			recipients.append(self.email_recipient)
+		if self.email_acme:
+			recipients.append(self.email_acme)
+		if self.email_supply:
+			recipients.append(self.email_supply)
+		#import pdb; pdb.set_trace()
+		#msg['To'] = self.email_recipient #self.email_acme #, self.email_recipient
+		msg['To'] = ", ".join(recipients)
 		msg['Subject'] = self.email_subject
 		message = self.email_text
 		msg.attach(MIMEText(message))
@@ -129,7 +134,6 @@ class IntentButton(Button):
 			msg.attach(part)
 		raw = base64.urlsafe_b64encode(msg.as_bytes())
 		raw = raw.decode()
-		#body = {'raw': raw}
 		body = {'raw': raw}
 		message = (service.users().messages().send(userId="me", body=body).execute())
 
@@ -151,12 +155,6 @@ class ToolDB(BoxLayout, Screen):
 		self.estnumber = "Estimate Option: " + str(self.estcounter+1)
 
 	def prepnewlist(self):
-		# for tool in self.tool_list.adapter.data:
-		# 	self.tool_list.adapter.data.remove(tool)
-		# 	self.tool_list._trigger_reset_populate()
-		# for price in self.price_list.adapter.data:
-		# 	self.price_list.adapter.data.remove(price)
-		# 	self.price_list._trigger_reset_populate()
 		
 		self.estimatejobsDict["toollist_"+str(self.estcounter)] = self.tool_list.adapter.data
 		self.estimatejobsDict["pricelist_"+str(self.estcounter)] = self.price_list.adapter.data
@@ -206,28 +204,9 @@ class ToolDB(BoxLayout, Screen):
 			self.tool_list._trigger_reset_populate()
 			self.price_list._trigger_reset_populate()
 
-	# def replace_tool(self):
-	# 	#If a list item is selected
-	# 	if self.tool_list.adapter.selection:
-	# 		#Get the text from the item selected
-	# 		selection = self.tool_list.adapter.selection[0].text
-	# 		selection_price = self.price_list.adapter.selection[0].text
-	# 		#Remove the matching item
-	# 		self.tool_list.adapter.data.remove(selection)
-	# 		self.price_list.adapter.data.remove(selection_price)
-	# 		#Get the name of the tool from TextInputs
-	# 		tool_name = self.tool_text_input.text
-	# 		price_name = self.tool_price_input.text
-	# 		#Add the updated data to the list
-	# 		self.tool_list.adapter.data.extend([tool_name])
-	# 		self.price_list.adapter.data.extend([tool_price])
-	# 		#Reset the ListView
-	# 		self.tool_list._trigger_reset_populate()
-	# 		self.price_list._trigger_reset_populate()
-
 	def save(self,name):
 		document = Document()
-		my_image = document.add_picture('companylogo.png', width=Inches(1.0))
+		my_image = document.add_picture('companylogowithinfo.png', width=Inches(1.0))
 		last_paragraph = document.paragraphs[-1]
 		last_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
 		for i in range(1,self.estcounter+1):
