@@ -1,36 +1,27 @@
-from __future__ import print_function
+# from __future__ import print_function
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 from kivy.uix.listview import ListItemButton
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
-from kivy.uix.rst import RstDocument
 from docx import Document
 from docx.shared import Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from kivy.uix.button import Button
 from kivy.properties import StringProperty
-from kivy.properties import BooleanProperty
-from plyer import email
-import string
-import smtplib
-from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email import encoders
 from os.path import basename
 from email.mime.application import MIMEApplication
 import httplib2
 import os
 import base64
 from apiclient import discovery
-from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label  
-from kivy.uix.textinput import TextInput
 import glob
 
 try:
@@ -64,8 +55,6 @@ def get_credentials():
 			Credentials, the obtained credential.
 		"""
 		SCOPES = 'https://mail.google.com/'
-		CLIENT_SECRET_FILE = r'C:\Users\krm47\OneDrive\Documents\EdKivyApp\client_secret.json'
-		APPLICATION_NAME = 'Acme Estimator'
 
 		home_dir = os.path.expanduser('~')
 		credential_dir = os.path.join(home_dir, '.credentials')
@@ -73,7 +62,6 @@ def get_credentials():
 			os.makedirs(credential_dir)
 		credential_path = os.path.join(credential_dir,
 									   'gmail-python-quickstart.json')
-
 		store = Storage(credential_path)
 		credentials = store.get()
 		if not credentials or credentials.invalid:
@@ -92,7 +80,7 @@ class IntentButton(Button):
 	email_subject = StringProperty()
 	email_text = StringProperty()
 	email_filename = StringProperty()
-	email_acme = StringProperty()
+	email_company = StringProperty()
 	email_supply = StringProperty()
 
 	def send_email(self, name, *args):
@@ -113,12 +101,10 @@ class IntentButton(Button):
 		recipients = []
 		if self.email_recipient:
 			recipients.append(self.email_recipient)
-		if self.email_acme:
-			recipients.append(self.email_acme)
+		if self.email_company:
+			recipients.append(self.email_company)
 		if self.email_supply:
 			recipients.append(self.email_supply)
-		#import pdb; pdb.set_trace()
-		#msg['To'] = self.email_recipient #self.email_acme #, self.email_recipient
 		msg['To'] = ", ".join(recipients)
 		msg['Subject'] = self.email_subject
 		message = self.email_text
@@ -177,7 +163,6 @@ class ToolDB(BoxLayout, Screen):
 
 	def delete_tool(self):
 		# If a list item is selected using tool
-		#import pdb; pdb.set_trace()
 		if self.tool_list.adapter.selection:
 
 			#Get the text from the item selected
@@ -206,7 +191,7 @@ class ToolDB(BoxLayout, Screen):
 
 	def save(self,name):
 		document = Document()
-		my_image = document.add_picture('companylogowithinfo.png', width=Inches(1.0))
+		my_image = document.add_picture('companylogo.png', width=Inches(1.0))
 		last_paragraph = document.paragraphs[-1]
 		last_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
 		for i in range(1,self.estcounter+1):
@@ -224,13 +209,9 @@ class ToolDB(BoxLayout, Screen):
 			hdr_cells[0].text = 'Item'
 			hdr_cells[1].text = 'Price'
 			sumtotal = 0
-			#import pdb; pdb.set_trace()
 			currtoollist = self.estimatejobsDict["toollist_"+str(i)]
 			currpricelist = self.estimatejobsDict["pricelist_"+str(i)]
 			
-			#toollist = str(self.tool_list.adapter.data)
-			#pricelist = str(self.price_list.adapter.data)
-
 			for item in range(len(currtoollist)):
 			    row_cells = table.add_row().cells
 			    row_cells[0].text = str(currtoollist[item])
@@ -247,7 +228,6 @@ class NamePopup(BoxLayout, Button, Screen):
 	filename_text_input = ObjectProperty()
 	
 	def isFileOriginal(self):
-		# print("MY FILE NAME IS: " + str(self.filename_text_input.text))
 		inputstr = str(self.filename_text_input.text) + '.*'
 		if glob.glob(inputstr):
 			popup = Popup(title='File already exists!', content=Label(text='We see that there is already a file with that name. \nPlease enter a different file name!'),
@@ -256,15 +236,6 @@ class NamePopup(BoxLayout, Button, Screen):
 			bool = False
 		else: bool = True
 		return bool
-	
-class TimeorEstimate(BoxLayout, Button, Screen):
-	pass
-
-class PriceBook(BoxLayout, Button, Screen):
-	pass
-
-class TimeCard(BoxLayout, Button, Screen):
-	pass
 
 presentation = Builder.load_file("tooldb.kv")
 
@@ -272,15 +243,9 @@ class NamePopup(App):
 	filename = StringProperty('')
 	def build(self):
 		return presentation
-class TimeorEstimate(App):
-	def build(self):
-		return presentation
 class ToolDBApp(App):
 	def build(self):
 		return presentation
-# class LaborApp(App):
-# 	def build(self):
-# 		return presentation
 class EmailApp(App):
 	def build(self):
 		return EmailInterface()
@@ -288,11 +253,7 @@ class EmailApp(App):
 	def on_pause(self):
 		return True
 
-# if __name__ == "__main__":
-
-TimeorEstimate().run()
 NamePopup().run()
 ToolDBApp().run()
 EmailApp().run()
-# LaborApp().run()
 GoBack().run()

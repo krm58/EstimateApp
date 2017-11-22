@@ -3,32 +3,10 @@
 #: import ListItemButton kivy.uix.listview.ListItemButton
 
 ScreenManagement:
-    TimeorEstimate:
     NamePopup:
-    PriceBook:
-    TimeCard:
     ToolDB:
     EmailInterface:
-    GoBack:
-
-<TimeOrEstimate>:
-    name: 'timeorestimateopt'
-    orientation: 'vertical'
-    padding: 10
-    spacing: 10
-    BoxLayout:
-        Button:
-            text: 'Submit a Time Card'
-            size_hint_x: 20
-            on_press: app.root.current = 'timecard'
-        Button:
-            text: 'Create an Estimate Using Price Book'
-            size_hint_x: 20
-            on_press: app.root.current = 'pricebook'
-        Button:
-            text: 'Create a Custom Estimate'
-            size_hint_x: 20
-            on_press: app.root.current = 'filenamepopup'
+    GoBack
 
 <NamePopup>:
     name: 'filenamepopup'
@@ -46,20 +24,6 @@ ScreenManagement:
         Button:
             text: "Continue -->"
             on_press: if root.isFileOriginal(): app.root.current = 'tooldb'
-
-<PriceBook>:
-    name: 'pricebook'
-    orientation: 'vertical'
-    BoxLayout:
-        Button:
-            text: 'test for price book'
-
-<TimeCard>:
-    name: 'timecard'
-    orientation: 'vertical'
-    BoxLayout:
-        Button:
-            text: 'test for time card'
 
 <ToolDB>:
 	name: 'tooldb'
@@ -150,11 +114,11 @@ ScreenManagement:
             on_press: app.root.current = 'filenamepopup'
     BoxLayout:
         Label:
-            text: 'Acme Email:'
+            text: "Sender's Email:"
         TextInput:
-            id: acmeemail
+            id: companyemail
             never_selected: False
-        	text: 'acmetestemail.com'
+        	text: ''
         	on_focus: if self.never_selected == False: self.text = ''; self.never_selected = True
     BoxLayout:
         Label:
@@ -192,7 +156,7 @@ ScreenManagement:
         email_recipient: recipientemail.text
         email_sender: senderemail.text
         email_subject: subject.text
-        email_acme: acmeemail.text
+        email_company: companyemail.text
         email_supply: supplyhouseemail.text
         email_text: text.text
         email_filename: root.manager.get_screen('filenamepopup').filename_text_input.text
